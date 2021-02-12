@@ -103,6 +103,11 @@ def depthFirstSearch(problem):
     state = problem.getStartState()
     expanded.append(state)
 
+    """
+    We create two dictionaries that store the parent state and the direction we came from
+    for any state we use as a key. In this way, we can traceback our route once we reached the
+    goal.
+    """
     parent = {}
     direction = {}
     parent[state] = state
@@ -128,23 +133,11 @@ def depthFirstSearch(problem):
         state = stack.pop()
         expanded.append(state)
 
+    # We store in the list the direction of the path we took
     while parent[state] != state:
         ret.insert(0, direction[state])
         state = parent[state]
 
-    for d in ret:
-        if d == "South":
-            d = Directions.SOUTH
-        elif d == "North":
-            d = Directions.NORTH
-        elif d == "West":
-            d = Directions.WEST
-        elif d == "East":
-            d = Directions.EAST
-        else:
-            d = None
-
-    print(ret)
     return ret
 
 def breadthFirstSearch(problem):

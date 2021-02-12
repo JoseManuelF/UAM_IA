@@ -87,7 +87,65 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from game import Directions
+
+    # We initialize the stack for the dfs algorithm
+    stack = util.Stack()
+
+    # The list of directions we will return
+    ret = []
+
+    """
+    We create a list with the states that have been already expanded, so that we don´t repeat
+    them in the algorithm. We add the first state which corresponds to the pacman position.
+    """
+    expanded = []
+    state = problem.getStartState()
+    expanded.append(state)
+
+    parent = {}
+    direction = {}
+    parent[state] = state
+    direction[state] = None
+
+    # We run the algorithm until we reach the goal
+    while not problem.isGoalState(state):
+        # We get all the successors that were not visited yet
+        for successor in problem.getSuccessors(state):
+
+            # We get the coordenates of the state to see if we have already expanded it
+            childState = successor[0]
+            if childState not in expanded:
+                parent[childState] = state
+                direction[childState] = successor[1]
+                stack.push(childState)
+
+        # We check if the stack is empty. If it is, the goal was not found
+        if stack.isEmpty():
+            return 'ERROR: The goal was not reached'
+
+        # We expand one succesor to discover new states
+        state = stack.pop()
+        expanded.append(state)
+
+    while parent[state] != state:
+        ret.insert(0, direction[state])
+        state = parent[state]
+
+    for d in ret:
+        if d == "South":
+            d = Directions.SOUTH
+        elif d == "North":
+            d = Directions.NORTH
+        elif d == "West":
+            d = Directions.WEST
+        elif d == "East":
+            d = Directions.EAST
+        else:
+            d = None
+
+    print(ret)
+    return ret
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""

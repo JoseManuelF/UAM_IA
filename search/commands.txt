@@ -19,3 +19,8 @@ python pacman.py -l mediumCorners -p AStarCornersAgent -z 0.5
 python pacman.py -l testSearch -p AStarFoodSearchAgent
 python pacman.py -l trickySearch -p AStarFoodSearchAgent
 python pacman.py -l bigSearch -p ClosestDotSearchAgent -z .5 
+
+breadthFirstSearch
+depthFirstSearch
+python3 pacman.py -l mediumMaze -p SearchAgent -a fn=depthFirstSearch
+python3 pacman.py -l mediumMaze -p SearchAgent -a fn=breadthFirstSearch

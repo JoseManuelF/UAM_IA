@@ -143,7 +143,58 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from game import Directions
+
+    # We initialize the queue for the bfs algorithm
+    queue = util.Queue()
+
+    # The list of directions we will return
+    ret = []
+
+    """
+    We create a list with the states that have been already expanded, so that we don´t repeat
+    them in the algorithm. We add the first state which corresponds to the pacman position.
+    """
+    expanded = []
+    state = problem.getStartState()
+    expanded.append(state)
+
+    """
+    We create two dictionaries that store the parent state and the direction we came from
+    for any state we use as a key. In this way, we can traceback our route once we reached the
+    goal.
+    """
+    parent = {}
+    direction = {}
+    parent[state] = state
+    direction[state] = None
+
+    # We run the algorithm until we reach the goal
+    while not problem.isGoalState(state):
+        # We get all the successors that were not visited yet
+        for successor in problem.getSuccessors(state):
+
+            # We get the coordenates of the state to see if we have already expanded it
+            childState = successor[0]
+            if childState not in expanded:
+                parent[childState] = state
+                direction[childState] = successor[1]
+                queue.push(childState)
+
+        # We check if the queue is empty. If it is, the goal was not found
+        if queue.isEmpty():
+            return 'ERROR: The goal was not reached'
+
+        # We expand one succesor to discover new states
+        state = queue.pop()
+        expanded.append(state)
+
+    # We store in the list the direction of the path we took
+    while parent[state] != state:
+        ret.insert(0, direction[state])
+        state = parent[state]
+
+    return ret
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""

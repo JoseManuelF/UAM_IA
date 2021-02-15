@@ -87,7 +87,6 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    from game import Directions
 
     # We initialize the stack for the dfs algorithm
     stack = util.Stack()
@@ -125,12 +124,12 @@ def depthFirstSearch(problem):
                 direction[childState] = successor[1]
                 stack.push(childState)
 
-        # We check if the stack is empty. If it is, the goal was not found
-        if stack.isEmpty():
-            return 'ERROR: The goal was not reached'
-
         # We expand one succesor to discover new states
-        state = stack.pop()
+        while state in expanded:
+            # We check if the stack is empty. If it is, the goal was not found
+            if stack.isEmpty():
+                return 'ERROR: The goal was not reached'
+            state = stack.pop()
         expanded.append(state)
 
     # We store in the list the direction of the path we took
@@ -143,7 +142,6 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    from game import Directions
 
     # We initialize the queue for the bfs algorithm
     queue = util.Queue()
@@ -181,12 +179,12 @@ def breadthFirstSearch(problem):
                 direction[childState] = successor[1]
                 queue.push(childState)
 
-        # We check if the queue is empty. If it is, the goal was not found
-        if queue.isEmpty():
-            return 'ERROR: The goal was not reached'
-
         # We expand one succesor to discover new states
-        state = queue.pop()
+        while state in expanded:
+            # We check if the queue is empty. If it is, the goal was not found
+            if queue.isEmpty():
+                return 'ERROR: The goal was not reached'
+            state = queue.pop()
         expanded.append(state)
 
     # We store in the list the direction of the path we took

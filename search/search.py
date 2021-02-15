@@ -124,7 +124,7 @@ def depthFirstSearch(problem):
                 direction[childState] = successor[1]
                 stack.push(childState)
 
-        # We expand one succesor to discover new states
+        # We expand one succesor (only if it was never expanded before) to discover new states
         while state in expanded:
             # We check if the stack is empty. If it is, the goal was not found
             if stack.isEmpty():
@@ -175,11 +175,13 @@ def breadthFirstSearch(problem):
             # We get the coordenates of the state to see if we have already expanded it
             childState = successor[0]
             if childState not in expanded:
-                parent[childState] = state
-                direction[childState] = successor[1]
+                # If the child state has already a parent/direction, we don't overwrite them
+                if childState not in parent.keys():
+                    parent[childState] = state
+                    direction[childState] = successor[1]
                 queue.push(childState)
 
-        # We expand one succesor to discover new states
+        # We expand one succesor (only if it was never expanded before) to discover new states
         while state in expanded:
             # We check if the queue is empty. If it is, the goal was not found
             if queue.isEmpty():

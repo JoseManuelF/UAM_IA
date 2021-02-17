@@ -200,6 +200,7 @@ def uniformCostSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
 
+
     # We initialize the priority queue for the ucs algorithm
     queue = util.PriorityQueue()
 
@@ -220,11 +221,16 @@ def uniformCostSearch(problem):
     goal.
     """
     parent = {}
-    accumulatedCost = {}
     direction = {}
     parent[state] = state
-    accumulatedCost[state] = 0
     direction[state] = None
+
+    """
+    We create a dictionary that stores the accumulative cost it takes to go from the initial state to
+    any state we check in the algorithm. The initial state has cost 0.
+    """
+    accumulatedCost = {}
+    accumulatedCost[state] = 0
 
     # We run the algorithm until we reach the goal
     while not problem.isGoalState(state):
@@ -234,9 +240,12 @@ def uniformCostSearch(problem):
             # We get the coordenates of the state to see if we have already expanded it
             childState = successor[0]
             if childState not in expanded:
-                # If the child state has already a parent/direction, we don't overwrite them
-                if childState not in parent.keys():
-                    accumulatedCost[childState] = accumulatedCost[state] + 1
+                # We add to the cost of going to the child state the accumulative cost of its parent
+                newCost = accumulatedCost[state] + successor[2]
+
+                # If the child state has not a parent/direction/cost yet or if we find a cheaper path, we overwrite them
+                if childState not in parent.keys() or accumulatedCost[childState] > newCost:
+                    accumulatedCost[childState] = newCost
                     parent[childState] = state
                     direction[childState] = successor[1]
                 queue.push(childState, accumulatedCost[childState])

@@ -24,3 +24,4 @@ breadthFirstSearch
 depthFirstSearch
 python3 pacman.py -l mediumMaze -p SearchAgent -a fn=depthFirstSearch
 python3 pacman.py -l mediumMaze -p SearchAgent -a fn=breadthFirstSearch
+python3 autograder.py -q q1

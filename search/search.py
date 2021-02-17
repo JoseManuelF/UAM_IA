@@ -197,9 +197,64 @@ def breadthFirstSearch(problem):
     return ret
 
 def uniformCostSearch(problem):
-    """Search the node of least total cost first."""
+    """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    # We initialize the priority queue for the ucs algorithm
+    queue = util.PriorityQueue()
+
+    # The list of directions we will return
+    ret = []
+
+    """
+    We create a list with the states that have been already expanded, so that we don´t repeat
+    them in the algorithm. We add the first state which corresponds to the pacman position.
+    """
+    expanded = []
+    state = problem.getStartState()
+    expanded.append(state)
+
+    """
+    We create two dictionaries that store the parent state and the direction we came from
+    for any state we use as a key. In this way, we can traceback our route once we reached the
+    goal.
+    """
+    parent = {}
+    accumulatedCost = {}
+    direction = {}
+    parent[state] = state
+    accumulatedCost[state] = 0
+    direction[state] = None
+
+    # We run the algorithm until we reach the goal
+    while not problem.isGoalState(state):
+        # We get all the successors that were not visited yet
+        for successor in problem.getSuccessors(state):
+
+            # We get the coordenates of the state to see if we have already expanded it
+            childState = successor[0]
+            if childState not in expanded:
+                # If the child state has already a parent/direction, we don't overwrite them
+                if childState not in parent.keys():
+                    accumulatedCost[childState] = accumulatedCost[state] + 1
+                    parent[childState] = state
+                    direction[childState] = successor[1]
+                queue.push(childState, accumulatedCost[childState])
+
+        # We expand one succesor (only if it was never expanded before) to discover new states
+        while state in expanded:
+            # We check if the queue is empty. If it is, the goal was not found
+            if queue.isEmpty():
+                return None
+            state = queue.pop()
+        expanded.append(state)
+
+    # We store in the list the direction of the path we took
+    while parent[state] != state:
+        ret.insert(0, direction[state])
+        state = parent[state]
+
+    return ret
 
 def nullHeuristic(state, problem=None):
     """

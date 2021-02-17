@@ -20,8 +20,23 @@ python pacman.py -l testSearch -p AStarFoodSearchAgent
 python pacman.py -l trickySearch -p AStarFoodSearchAgent
 python pacman.py -l bigSearch -p ClosestDotSearchAgent -z .5 
 
+Funciones:
 breadthFirstSearch
 depthFirstSearch
+uniformCostSearch
+
+Mapas:
+tinyMaze
+smallMaze
+mediumMaze
+bigMaze
+mediumDottedMaze
+mediumScaryMaze
+
 python3 pacman.py -l mediumMaze -p SearchAgent -a fn=depthFirstSearch
 python3 pacman.py -l mediumMaze -p SearchAgent -a fn=breadthFirstSearch
+python3 pacman.py -l mediumMaze -p SearchAgent -a fn=uniformCostSearch
+python3 pacman.py -l mediumScaryMaze -p SearchAgent -a fn=breadthFirstSearch
+python3 pacman.py -l mediumDottedMaze -p SearchAgent -a fn=breadthFirstSearch
 python3 autograder.py -q q1
+python3 eightpuzzle.py

@@ -128,7 +128,7 @@ def depthFirstSearch(problem):
         while state in expanded:
             # We check if the stack is empty. If it is, the goal was not found
             if stack.isEmpty():
-                return 'ERROR: The goal was not reached'
+                return None
             state = stack.pop()
         expanded.append(state)
 
@@ -185,7 +185,7 @@ def breadthFirstSearch(problem):
         while state in expanded:
             # We check if the queue is empty. If it is, the goal was not found
             if queue.isEmpty():
-                return 'ERROR: The goal was not reached'
+                return None
             state = queue.pop()
         expanded.append(state)
 

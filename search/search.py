@@ -248,6 +248,8 @@ def uniformCostSearch(problem):
                     accumulatedCost[childState] = newCost
                     parent[childState] = state
                     direction[childState] = successor[1]
+
+                # We add to the priority list the node taking into account the cost
                 queue.push(childState, accumulatedCost[childState])
 
         # We expand one succesor (only if it was never expanded before) to discover new states
@@ -324,7 +326,9 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                     accumulatedCost[childState] = newCost
                     parent[childState] = state
                     direction[childState] = successor[1]
-                queue.push(childState, accumulatedCost[childState]+heuristic(childState, problem))
+
+                # We add to the priority list the node taking into account the cost and the heuristic value
+                queue.push(childState, accumulatedCost[childState] + heuristic(childState, problem))
 
         # We expand one succesor (only if it was never expanded before) to discover new states
         while state in expanded:

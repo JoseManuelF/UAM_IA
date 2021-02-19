@@ -275,7 +275,71 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+
+    # We initialize the priority queue for the A* algorithm
+    queue = util.PriorityQueue()
+
+    # The list of directions we will return
+    ret = []
+
+    """
+    We create a list with the states that have been already expanded, so that we don´t repeat
+    them in the algorithm. We add the first state which corresponds to the pacman position.
+    """
+    expanded = []
+    state = problem.getStartState()
+    expanded.append(state)
+
+    """
+    We create two dictionaries that store the parent state and the direction we came from
+    for any state we use as a key. In this way, we can traceback our route once we reached the
+    goal.
+    """
+    parent = {}
+    direction = {}
+    parent[state] = state
+    direction[state] = None
+
+    """
+    We create a dictionary that stores the accumulative cost it takes to go from the initial state to
+    any state we check in the algorithm. The initial state has cost 0.
+    """
+    accumulatedCost = {}
+    accumulatedCost[state] = 0
+
+    # We run the algorithm until we reach the goal
+    while not problem.isGoalState(state):
+        # We get all the successors that were not visited yet
+        for successor in problem.getSuccessors(state):
+
+            # We get the coordenates of the state to see if we have already expanded it
+            childState = successor[0]
+            if childState not in expanded:
+                # We add to the cost of going to the child state the accumulative cost of its parent
+                newCost = accumulatedCost[state] + successor[2]
+
+                # If the child state has not a parent/direction/cost yet or if we find a cheaper path, we overwrite them
+                if childState not in parent.keys() or accumulatedCost[childState] > newCost:
+                    accumulatedCost[childState] = newCost
+                    parent[childState] = state
+                    direction[childState] = successor[1]
+                queue.push(childState, accumulatedCost[childState]+heuristic(childState, problem))
+
+        # We expand one succesor (only if it was never expanded before) to discover new states
+        while state in expanded:
+            # We check if the queue is empty. If it is, the goal was not found
+            if queue.isEmpty():
+                return None
+            state = queue.pop()
+        expanded.append(state)
+
+    # We store in the list the direction of the path we took
+    while parent[state] != state:
+        ret.insert(0, direction[state])
+        state = parent[state]
+
+    return ret
 
 
 # Abbreviations

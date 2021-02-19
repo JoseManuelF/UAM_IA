@@ -24,6 +24,7 @@ Funciones:
 breadthFirstSearch
 depthFirstSearch
 uniformCostSearch
+aStarSearch
 
 Mapas:
 tinyMaze
@@ -32,11 +33,17 @@ mediumMaze
 bigMaze
 mediumDottedMaze
 mediumScaryMaze
+openMaze
 
 python3 pacman.py -l mediumMaze -p SearchAgent -a fn=depthFirstSearch
 python3 pacman.py -l mediumMaze -p SearchAgent -a fn=breadthFirstSearch
 python3 pacman.py -l mediumMaze -p SearchAgent -a fn=uniformCostSearch
 python3 pacman.py -l mediumScaryMaze -p SearchAgent -a fn=breadthFirstSearch
 python3 pacman.py -l mediumDottedMaze -p SearchAgent -a fn=breadthFirstSearch
+python3 pacman.py -l openMaze -p SearchAgent -a fn=breadthFirstSearch
+python3 pacman.py -l mediumMaze -p SearchAgent -a fn=aStarSearch
+python3 pacman.py -l bigMaze -z .9 -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic
+python3 pacman.py -l openMaze -z .9 -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic
+python3 pacman.py -l openMaze -z .9 -p SearchAgent -a fn=astar,heuristic=cornersHeuristic
 python3 autograder.py -q q1
 python3 eightpuzzle.py

@@ -305,7 +305,17 @@ class CornersProblem(search.SearchProblem):
         "*** YOUR CODE HERE ***"
 
         if state in self.corners:
-            return True
+            # We transform the tuple of corners to a list
+            corners_list = list(self.corners)
+
+            # We remove the state from the list of corners still to reach
+            corners_list.remove(state)
+            self.corners = tuple(corners_list)
+
+            # If there are no corners left to visit, we have reached our goal
+            if not self.corners:
+                return True
+
         return False
 
     def getSuccessors(self, state):

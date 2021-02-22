@@ -278,16 +278,20 @@ class CornersProblem(search.SearchProblem):
         Stores the walls, pacman's starting position and corners.
         """
         self.walls = startingGameState.getWalls()
-        self.startingPosition = startingGameState.getPacmanPosition()
         top, right = self.walls.height-2, self.walls.width-2
         self.corners = ((1,1), (1,top), (right, 1), (right, top))
         for corner in self.corners:
             if not startingGameState.hasFood(*corner):
                 print('Warning: no food in corner ' + str(corner))
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
+        self.heuristicInfo = {}
+
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
+
+        # We include in the starting position, apart from the pacman position, the location of the food in the game
+        self.startingPosition = (startingGameState.getPacmanPosition(), startingGameState.getFood())
 
     def getStartState(self):
         """
@@ -296,6 +300,7 @@ class CornersProblem(search.SearchProblem):
         """
         "*** YOUR CODE HERE ***"
 
+        # The state is composed of its position coordinates and the food location
         return self.startingPosition
 
     def isGoalState(self, state):
@@ -304,17 +309,9 @@ class CornersProblem(search.SearchProblem):
         """
         "*** YOUR CODE HERE ***"
 
-        if state in self.corners:
-            # We transform the tuple of corners to a list
-            corners_list = list(self.corners)
-
-            # We remove the state from the list of corners still to reach
-            corners_list.remove(state)
-            self.corners = tuple(corners_list)
-
-            # If there are no corners left to visit, we have reached our goal
-            if not self.corners:
-                return True
+        # It is a goal state just in case all four corners have been visited
+        if state[1].count() == 0:
+            return True
 
         return False
 
@@ -339,13 +336,17 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
             "*** YOUR CODE HERE ***"
 
-            x,y = state
+            x,y = state[0]
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
+                # The successor state is composed of its position coordenates and the food location
                 nextState = (nextx, nexty)
+                nextFood = state[1].copy()
+                nextFood[nextx][nexty] = False
+
                 cost = 1
-                successors.append( ( nextState, action, cost) )
+                successors.append( ( (nextState, nextFood), action, cost) )
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -356,7 +357,7 @@ class CornersProblem(search.SearchProblem):
         include an illegal move, return 999999.  This is implemented for you.
         """
         if actions == None: return 999999
-        x,y= self.startingPosition
+        x,y = self.getStartState()[0]
         for action in actions:
             dx, dy = Actions.directionToVector(action)
             x, y = int(x + dx), int(y + dy)

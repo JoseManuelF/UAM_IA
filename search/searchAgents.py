@@ -264,7 +264,7 @@ def euclideanHeuristic(position, problem, info={}):
 
 #####################################################
 # This portion is incomplete.  Time to write code!  #
-#####################################################
+#####################################################    
 
 class CornersProblem(search.SearchProblem):
     """
@@ -291,7 +291,7 @@ class CornersProblem(search.SearchProblem):
         "*** YOUR CODE HERE ***"
 
         # We include in the starting position, apart from the pacman position, the location of the food in the game
-        self.startingPosition = (startingGameState.getPacmanPosition(), startingGameState.getFood())
+        self.startingPosition = (startingGameState.getPacmanPosition(), 0)
 
     def getStartState(self):
         """
@@ -303,14 +303,31 @@ class CornersProblem(search.SearchProblem):
         # The state is composed of its position coordinates and the food location
         return self.startingPosition
 
+    # Function that checks wether b is part of a
+    def isVisited(self, l, a, b):
+        for i in range(l-1, 0-1, -1):
+            if(a>2**i):
+                a = a-2**i
+                if(2**i == b):
+                    return True
+        return False
+
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-
         # It is a goal state just in case all four corners have been visited
-        if state[1].count() == 0:
+
+        for i in range(len(self.corners)):
+            if state[0] == self.corners[i]:
+                if (not self.isVisited(len(self.corners), state[1], 2**i)):
+                    print("state: ", state)
+                    state = list(state)
+                    state[1] += 2**i
+                    state = tuple(state)
+
+        if state[1] == (2**len(self.corners))-1:
             return True
 
         return False
@@ -342,11 +359,11 @@ class CornersProblem(search.SearchProblem):
             if not self.walls[nextx][nexty]:
                 # The successor state is composed of its position coordenates and the food location
                 nextState = (nextx, nexty)
-                nextFood = state[1].copy()
-                nextFood[nextx][nexty] = False
+                nextCorners = state[1]
+                #nextCorners[nextx][nexty] = False
 
                 cost = 1
-                successors.append( ( (nextState, nextFood), action, cost) )
+                successors.append( ( (nextState, nextCorners), action, cost) )
 
         self._expanded += 1 # DO NOT CHANGE
         return successors

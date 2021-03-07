@@ -45,5 +45,6 @@ python3 pacman.py -l mediumMaze -p SearchAgent -a fn=aStarSearch
 python3 pacman.py -l bigMaze -z .5 -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic
 python3 pacman.py -l openMaze -z .5 -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic
 python3 pacman.py -l tinyCorners -p SearchAgent -a fn=bfs,prob=CornersProblem
+python pacman.py -l mediumCorners -p AStarCornersAgent
 python3 autograder.py -q q1
 python3 eightpuzzle.py

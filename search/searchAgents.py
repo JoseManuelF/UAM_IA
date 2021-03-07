@@ -290,7 +290,7 @@ class CornersProblem(search.SearchProblem):
         # in initializing the problem
         "*** YOUR CODE HERE ***"
 
-        # We include in the starting position, apart from the pacman position, the location of the food in the game
+        # We include in the starting position, apart from the pacman position, the number of corners that have been visited
         self.startingPosition = (startingGameState.getPacmanPosition(), 0)
 
     def getStartState(self):
@@ -300,15 +300,16 @@ class CornersProblem(search.SearchProblem):
         """
         "*** YOUR CODE HERE ***"
 
-        # The state is composed of its position coordinates and the food location
+        # The state is composed of its position coordinates and the corners that have been visited
         return self.startingPosition
 
-    # Function that checks wether b is part of a
+    # Function that checks whether b is part of a (meaning b has been visited)
     def isVisited(self, l, a, b):
-        for i in range(l-1, 0-1, -1):
-            if(a>2**i):
+        for i in range (l-1, -1, -1):
+            if (a > 2**i):
                 a = a-2**i
-                if(2**i == b):
+                # b is part of a
+                if (2**i == b):
                     return True
         return False
 
@@ -317,16 +318,8 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
+
         # It is a goal state just in case all four corners have been visited
-
-        for i in range(len(self.corners)):
-            if state[0] == self.corners[i]:
-                if (not self.isVisited(len(self.corners), state[1], 2**i)):
-                    print("state: ", state)
-                    state = list(state)
-                    state[1] += 2**i
-                    state = tuple(state)
-
         if state[1] == (2**len(self.corners))-1:
             return True
 
@@ -357,10 +350,15 @@ class CornersProblem(search.SearchProblem):
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
-                # The successor state is composed of its position coordenates and the food location
+                # The successor state is composed of its position coordenates and the corners that have been visited
                 nextState = (nextx, nexty)
                 nextCorners = state[1]
-                #nextCorners[nextx][nexty] = False
+
+                # We update the visited corners in case the successor is now in one of them
+                for i in range(len(self.corners)):
+                    if nextState == self.corners[i]:
+                        if (not self.isVisited(len(self.corners), nextCorners, 2**i)):
+                            nextCorners += 2**i
 
                 cost = 1
                 successors.append( ( (nextState, nextCorners), action, cost) )

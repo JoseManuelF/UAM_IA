@@ -306,7 +306,7 @@ class CornersProblem(search.SearchProblem):
     # Function that checks whether b is part of a (meaning b has been visited)
     def isVisited(self, l, a, b):
         for i in range (l-1, -1, -1):
-            if (a > 2**i):
+            if (a >= 2**i):
                 a = a-2**i
                 # b is part of a
                 if (2**i == b):
@@ -398,22 +398,31 @@ def cornersHeuristic(state, problem):
 
     "*** YOUR CODE HERE ***"
     val = 0 # Heuristic value of the current state
-    notVisitedCorners = 0
+    currentState = state[0]
+    notVisitedCorners = []
 
     # We get the corners which have not been visited yet
-    for i in range (len(corners)):
+    i = 0
+    for corner in corners:
         # If the corner has not been visited
         if (not problem.isVisited(len(corners), state[1], 2**i)):
-            notVisitedCorners += 1
-            val += util.manhattanDistance(state[0], corners[i])
+            notVisitedCorners.append(corner)
+        i += 1
 
-    # We focus only on one side of the board while there are corners to explore on one side.
-    if (notVisitedCorners != 2):
-        val += min(state[0][0], (walls.width-2) - state[0][0])*2
+    # We follow a path passing through all the non visited corners to get the heuristic 
+    while notVisitedCorners:
+        min = 0
+        # We take the minimum distance to a next unvisited corner
+        for c in notVisitedCorners:
+            distance = util.manhattanDistance(currentState, c)
+            if (min > distance or min == 0):
+                min = distance
+                minCorner = c
 
-    # When we have explored all the corners on one side, we focus on reaching the other side as fast as possible.
-    if (notVisitedCorners%2 == 0):
-        val += min(state[0][1], (walls.height-2) - state[0][1])*2
+        # We place ourselves on the closest corner and update the heuristic value 
+        val += min
+        currentState = minCorner
+        notVisitedCorners.remove(minCorner)
 
     return val
 

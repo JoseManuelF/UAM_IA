@@ -62,17 +62,6 @@ player_minimax4 = Player(
     ),
 )
 
-# MIO vvv
-player_trivial = Player(
-    name='Trivial',
-    strategy=MinimaxStrategy(
-        heuristic=heuristic,
-        max_depth_minimax=4,
-        verbose=0,
-    ),
-)
-# MIO ^^^
-
 
 # Manual vs manual player
 # player_a, player_b = player_manual, player_manual2
@@ -82,7 +71,7 @@ player_trivial = Player(
 
 
 # minimax vs minimax player
-player_a, player_b = player_minimax3, player_trivial
+player_a, player_b = player_minimax3, player_minimax4
 
 
 """

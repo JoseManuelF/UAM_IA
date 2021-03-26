@@ -11,12 +11,9 @@ import numpy as np
 
 from game import Player, TwoPlayerGameState, TwoPlayerMatch
 from heuristic import simple_evaluation_function
-from tictactoe import TicTacToe
+from reversi import Reversi
 from tournament import StudentHeuristic, Tournament
-from heuristics.g2391_p2_09_Herrera_Freire import (
-    Solution1,
-    Solution2,
-)
+from heuristics.g2391_p2_09_Herrera_Freire import Solution2
 
 
 class Heuristic1(StudentHeuristic):
@@ -52,20 +49,21 @@ class Heuristic3(StudentHeuristic):
 
 def create_match(player1: Player, player2: Player) -> TwoPlayerMatch:
 
-    dim_board = 3
+    dim_board = 8
 
     initial_board = np.zeros((dim_board, dim_board))
     initial_player = player1
 
-    game = TicTacToe(
+    game = Reversi(
         player1=player1,
         player2=player2,
-        dim_board=dim_board,
+        height=dim_board,
+        width=dim_board
     )
 
     game_state = TwoPlayerGameState(
         game=game,
-        board=initial_board,
+        board=None,
         initial_player=initial_player,
     )
 
@@ -73,10 +71,10 @@ def create_match(player1: Player, player2: Player) -> TwoPlayerMatch:
 
 
 tour = Tournament(max_depth=3, init_match=create_match)
-strats = tour.load_strategies_from_folder(folder="heuristics", max_strat=2)
-#strats = {'opt1': [Heuristic1], 'opt2': [Heuristic2], 'opt3': [Heuristic3], 'opt4': [Solution1]}
+# strats = {'opt1': [Heuristic1], 'opt2': [Heuristic2], 'opt3': [Heuristic3]}
+strats = tour.load_strategies_from_folder("heuristics", 3)
 
-n = 5
+n = 1
 scores, totals, names = tour.run(
     student_strategies=strats,
     increasing_depth=False,

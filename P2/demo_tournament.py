@@ -13,7 +13,6 @@ from game import Player, TwoPlayerGameState, TwoPlayerMatch
 from heuristic import simple_evaluation_function
 from reversi import Reversi
 from tournament import StudentHeuristic, Tournament
-from heuristics.g2391_p2_09_Herrera_Freire import Solution2
 
 
 class Heuristic1(StudentHeuristic):
@@ -74,12 +73,12 @@ tour = Tournament(max_depth=3, init_match=create_match)
 # strats = {'opt1': [Heuristic1], 'opt2': [Heuristic2], 'opt3': [Heuristic3]}
 strats = tour.load_strategies_from_folder("heuristics", 3)
 
-n = 1
+n = 2
 scores, totals, names = tour.run(
     student_strategies=strats,
     increasing_depth=False,
     n_pairs=n,
-    allow_selfmatch=True,
+    allow_selfmatch=False,
 )
 
 print(

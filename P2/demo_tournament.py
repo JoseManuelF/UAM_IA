@@ -78,7 +78,7 @@ scores, totals, names = tour.run(
     student_strategies=strats,
     increasing_depth=False,
     n_pairs=n,
-    allow_selfmatch=False,
+    allow_selfmatch=True,
 )
 
 print(

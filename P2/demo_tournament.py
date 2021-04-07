@@ -69,11 +69,11 @@ def create_match(player1: Player, player2: Player) -> TwoPlayerMatch:
     return TwoPlayerMatch(game_state, max_sec_per_move=1000, gui=False)
 
 
-tour = Tournament(max_depth=3, init_match=create_match)
-# strats = {'opt1': [Heuristic1], 'opt2': [Heuristic2], 'opt3': [Heuristic3]}
-strats = tour.load_strategies_from_folder("heuristics", 3)
+tour = Tournament(max_depth=4, init_match=create_match)
+strats = {'opt1': [Heuristic1]} #'opt2': [Heuristic2], 'opt3': [Heuristic3]
+# strats = tour.load_strategies_from_folder("heuristics", 3)
 
-n = 2
+n = 1
 scores, totals, names = tour.run(
     student_strategies=strats,
     increasing_depth=False,

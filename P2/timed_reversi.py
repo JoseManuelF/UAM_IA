@@ -1,6 +1,6 @@
 import timeit
 
-timeitStr = '''
+setupCode = '''
 import numpy as np
 
 from game import Player, TwoPlayerGameState, TwoPlayerMatch
@@ -70,7 +70,7 @@ strats = {'opt1': [Heuristic1]} #'opt2': [Heuristic2], 'opt3': [Heuristic3]
 n = 1
 '''
 
-execution_code = '''
+mainCode = '''
 scores, totals, names = tour.run(
     student_strategies=strats,
     increasing_depth=False,
@@ -100,6 +100,6 @@ for name1 in names:
     print()
 '''
 
-print(timeit.timeit(setup=timeitStr,
-                    stmt=execution_code,
+print(timeit.timeit(setup=setupCode,
+                    stmt=mainCode,
                     number=1))

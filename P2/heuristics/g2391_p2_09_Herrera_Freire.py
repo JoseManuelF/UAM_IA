@@ -10,53 +10,6 @@ from reversi import from_dictionary_to_array_board
 
 class Solution1(StudentHeuristic):
   def get_name(self) -> str:
-    return "Paprika"
-    
-  def evaluation_function(self, state: TwoPlayerGameState) -> float:
-
-    # We get the board of the state in a list
-    board = from_dictionary_to_array_board(state.board, 8, 8)
-
-    # We get the label of our player and enemy
-    if (state.is_player_max(state.next_player)):
-      me = state.next_player.label
-      enemy = state.previous_player.label
-    else:
-      me = state.previous_player.label
-      enemy = state.next_player.label
-
-    # We store the strategic positions of the board that the heuristic will take into account
-    corners = ((0,0), (0,7), (7,0), (7,7))
-    xcells = ((1,1), (1,6), (6,1), (6,6))
-    ccells = ((0,1), (1,0), (1,7), (0,6), (7,1), (6,0), (7,6), (6,7))
-
-    val = 100
-
-    # The c and x cells are a bad move so we penalize them
-    for cell in ccells:
-      if (board[cell[0]][cell[1]] == me):
-        val -= 4
-      elif (board[cell[0]][cell[1]] == enemy):
-        val += 4
-
-    for cell in xcells:
-      if (board[cell[0]][cell[1]] == me):
-        val -= 10
-      elif (board[cell[0]][cell[1]] == enemy):
-        val += 10
-
-    # The corners are a great move so we favour them
-    for cell in corners:
-      if (board[cell[0]][cell[1]] == me):
-        val += 20
-      elif (board[cell[0]][cell[1]] == enemy):
-        val -= 20
-
-    return val
-
-
-class Solution2(StudentHeuristic):
-  def get_name(self) -> str:
     return "Peppermint"
     
   def evaluation_function(self, state: TwoPlayerGameState) -> float:
@@ -139,6 +92,53 @@ class Solution2(StudentHeuristic):
         val += -3
       elif (board[cell[0]][cell[1]] == enemy):
         val -= -3
+
+    return val
+
+
+class Solution2(StudentHeuristic):
+  def get_name(self) -> str:
+    return "Paprika"
+    
+  def evaluation_function(self, state: TwoPlayerGameState) -> float:
+
+    # We get the board of the state in a list
+    board = from_dictionary_to_array_board(state.board, 8, 8)
+
+    # We get the label of our player and enemy
+    if (state.is_player_max(state.next_player)):
+      me = state.next_player.label
+      enemy = state.previous_player.label
+    else:
+      me = state.previous_player.label
+      enemy = state.next_player.label
+
+    # We store the strategic positions of the board that the heuristic will take into account
+    corners = ((0,0), (0,7), (7,0), (7,7))
+    xcells = ((1,1), (1,6), (6,1), (6,6))
+    ccells = ((0,1), (1,0), (1,7), (0,6), (7,1), (6,0), (7,6), (6,7))
+
+    val = 100
+
+    # The c and x cells are a bad move so we penalize them
+    for cell in ccells:
+      if (board[cell[0]][cell[1]] == me):
+        val -= 4
+      elif (board[cell[0]][cell[1]] == enemy):
+        val += 4
+
+    for cell in xcells:
+      if (board[cell[0]][cell[1]] == me):
+        val -= 10
+      elif (board[cell[0]][cell[1]] == enemy):
+        val += 10
+
+    # The corners are a great move so we favour them
+    for cell in corners:
+      if (board[cell[0]][cell[1]] == me):
+        val += 20
+      elif (board[cell[0]][cell[1]] == enemy):
+        val -= 20
 
     return val
 

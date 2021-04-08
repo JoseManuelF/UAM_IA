@@ -70,8 +70,8 @@ def create_match(player1: Player, player2: Player) -> TwoPlayerMatch:
 
 
 tour = Tournament(max_depth=4, init_match=create_match)
-strats = {'opt1': [Heuristic1]} #'opt2': [Heuristic2], 'opt3': [Heuristic3]
-# strats = tour.load_strategies_from_folder("heuristics", 3)
+# strats = {'opt1': [Heuristic1], 'opt2': [Heuristic2], 'opt3': [Heuristic3]}
+strats = tour.load_strategies_from_folder("heuristics", 1)
 
 n = 1
 scores, totals, names = tour.run(

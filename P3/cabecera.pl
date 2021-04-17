@@ -15,6 +15,7 @@ sum_pot_prod(X, Y, Potencia, Resultado) :- error_control1(X, Y, Potencia), prod(
 
 /* Error control */
 error_control1(X, Y, Potencia) :- not(error_pot1(Potencia)), not(error_length1(X, Y)).
+
 error_pot1(Potencia) :- (Potencia < 0 -> write_log('ERROR 1.1 Potencia.')).
 error_length1(X, Y) :- length(X, Lx), length(Y, Ly), (Lx =\= Ly -> write_log('ERROR 1.2 Longitud.')).
 
@@ -55,7 +56,25 @@ calculate_penultimate([_|TL], Y) :- calculate_penultimate(TL, Y).
 *		Sublista: Sublista de salida de cadenas de texto.
 *
 ****************/
-sublista(L, Menor, Mayor, E, Sublista) :- print('Error. Este ejercicio no esta implementado todavia.'), !, fail.
+/* After getting the sublist we check whether it contains the element given or not */
+sublista(L, Menor, Mayor, E, Sublista) :- error_control3(L, Menor, Mayor, E), get_sublist(L, Menor, Mayor, Sublista),
+                                          not(error_element3(Sublista, E)).
+
+/* Error control */
+error_control3(L, Menor, Mayor, E) :- not(error_element3(L, E)), not(error_indexes3(L, Menor, Mayor)).
+
+error_element3(L, E) :- (not(find_element(L, E)) -> write_log('ERROR 3.1 Elemento.')).
+/* Returns true if the element is found in the list */
+find_element([E|_], E).
+find_element([_|TL], E) :- find_element(TL, E).
+
+error_indexes3(L, Menor, Mayor) :- length(L, Len), (((Menor > Mayor) ; (Mayor > Len)) -> write_log('ERROR 3.2 Indices.')).
+
+/* We get the sublist with the indexes given */
+get_sublist([HL|_], 1, 1, [HL]).
+get_sublist([HL|TL], 1, Mayor, [HL|Sublista]) :- Mayor > 1, Index2 is Mayor - 1, get_sublist(TL, 1, Index2, Sublista).
+get_sublist([_|TL], Menor, Mayor, Sublista) :- Menor > 1, Index1 is Menor - 1, Index2 is Mayor - 1,
+                                               get_sublist(TL, Index1, Index2, Sublista).
 
 /***************
 * EJERCICIO 4. espacio_lineal/4

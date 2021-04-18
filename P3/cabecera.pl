@@ -20,7 +20,7 @@ error_pot1(Potencia) :- (Potencia < 0 -> write_log('ERROR 1.1 Potencia.')).
 error_length1(X, Y) :- length(X, Lx), length(Y, Ly), (Lx =\= Ly -> write_log('ERROR 1.2 Longitud.')).
 
 /* Sum of the products powered to a number */
-prod([], [], Potencia, Sum) :- Sum is 0.
+prod([], [], _, Sum) :- Sum is 0.
 prod([H1|T1], [H2|T2], Potencia, Resultado) :- prod(T1, T2, Potencia, Sum), Resultado is (H1*H2)**Potencia + Sum.
 
 /***************
@@ -87,7 +87,26 @@ get_sublist([_|TL], Menor, Mayor, Sublista) :- Menor > 1, Index1 is Menor - 1, I
 *               Rejilla: Vector de numeros de valor real resultante con la rejilla.
 *
 ****************/
-espacio_lineal(Menor, Mayor, Numero_elementos, Rejilla) :- print('Error. Este ejercicio no esta implementado todavia.'), !, fail.
+/* As we get a nested list from linear_grid, we use the flatten predicate in lists for removing the extra brackets */
+espacio_lineal(Menor, Mayor, Numero_elementos, Rejilla) :- error_control4(Menor, Mayor, Numero_elementos),
+                                                           distance_elements(Menor, Mayor, Numero_elementos, Distance),
+                                                           linear_grid(Menor, Mayor, Numero_elementos, NestedList, Distance, _),
+                                                           flatten(NestedList, Rejilla).
+
+/* Error control */
+error_control4(Menor, Mayor, Numero_elementos) :- not(error_indexes4(Menor, Mayor)), not(error_npoints4(Numero_elementos)).
+
+error_indexes4(Menor, Mayor) :- (Menor >= Mayor -> write_log('ERROR 4.1 Indices.')).
+error_npoints4(Numero_elementos) :- (Numero_elementos < 2 -> write_log('ERROR 4.2 Numero Elementos.')).
+
+/* We get the distance between the elements in the linear grid list */
+distance_elements(Menor, Mayor, Numero_elementos, Distance) :- Distance is (Mayor - Menor)/(Numero_elementos - 1).
+
+/* We calculate the linear grid with the number of points and the interval given */
+linear_grid(Menor, _, 1, Menor, _, Menor).
+linear_grid(Menor, Mayor, Numero_elementos, [Rejilla|[Sum]], Distance, Sum) :- Count is Numero_elementos - 1,
+                                                                               linear_grid(Menor, Mayor, Count, Rejilla, Distance, CurrentValue),
+                                                                               Sum is CurrentValue + Distance.
 
 /***************
 * EJERCICIO 5. normalizar/2

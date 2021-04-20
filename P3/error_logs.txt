@@ -7,3 +7,6 @@ ERROR 4.1 Indices.
 ERROR 4.1 Indices.
 ERROR 4.2 Numero Elementos.
 ERROR 4.2 Numero Elementos.
+ERROR 5.1 Negativos.
+ERROR 5.1 Negativos.
+ERROR 5.1 Negativos.

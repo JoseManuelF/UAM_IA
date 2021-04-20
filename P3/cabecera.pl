@@ -104,9 +104,9 @@ distance_elements(Menor, Mayor, Numero_elementos, Distance) :- Distance is (Mayo
 
 /* We calculate the linear grid with the number of points and the interval given */
 linear_grid(Menor, _, 1, Menor, _, Menor).
-linear_grid(Menor, Mayor, Numero_elementos, [Rejilla|[Sum]], Distance, Sum) :- Count is Numero_elementos - 1,
-                                                                               linear_grid(Menor, Mayor, Count, Rejilla, Distance, CurrentValue),
-                                                                               Sum is CurrentValue + Distance.
+linear_grid(Menor, Mayor, Numero_elementos, [NestedList|[Sum]], Distance, Sum) :- Count is Numero_elementos - 1,
+                                                                                  linear_grid(Menor, Mayor, Count, NestedList, Distance, CurrentValue),
+                                                                                  Sum is CurrentValue + Distance.
 
 /***************
 * EJERCICIO 5. normalizar/2
@@ -117,7 +117,23 @@ linear_grid(Menor, Mayor, Numero_elementos, [Rejilla|[Sum]], Distance, Sum) :- C
 *		Distribucion: Vector de numeros reales de salida. Distribucion normalizada.
 *
 ****************/
-normalizar(Distribucion_sin_normalizar, Distribucion) :- print('Error. Este ejercicio no esta implementado todavia.'), !, fail.
+normalizar(Distribucion_sin_normalizar, Distribucion) :- not(error_negatives5(Distribucion_sin_normalizar)),
+                                                         normalization_constant(Distribucion_sin_normalizar, Z),
+                                                         normalize_list(Distribucion_sin_normalizar, Distribucion, Z).
+
+/* Error control */
+error_negatives5(Distribucion_sin_normalizar) :- (find_negative(Distribucion_sin_normalizar) -> write_log('ERROR 5.1 Negativos.')).
+/* Returns true if there is a negative element in the list */
+find_negative([HL|_]) :- HL < 0.
+find_negative([_|TL]) :- find_negative(TL).
+
+/* We calculate the the normalization constant z */
+normalization_constant([], 0).
+normalization_constant([HL|TL], Z) :- normalization_constant(TL, Sum), Z is Sum + HL.
+
+/* We divide all the elements in the list by the normalization constant z */
+normalize_list([HL], [Distribucion], Z) :- Distribucion is HL/Z.
+normalize_list([HL|TL], [Division|Distribucion], Z) :- normalize_list(TL, Distribucion, Z), Division is HL/Z.
 
 /***************
 * EJERCICIO 6. divergencia_kl/3

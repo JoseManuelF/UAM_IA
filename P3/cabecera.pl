@@ -127,7 +127,7 @@ error_negatives5(Distribucion_sin_normalizar) :- (find_negative(Distribucion_sin
 find_negative([HL|_]) :- HL < 0.
 find_negative([_|TL]) :- find_negative(TL).
 
-/* We calculate the the normalization constant z */
+/* We calculate the normalization constant z */
 normalization_constant([], 0).
 normalization_constant([HL|TL], Z) :- normalization_constant(TL, Sum), Z is Sum + HL.
 

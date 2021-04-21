@@ -145,7 +145,29 @@ normalize_list([HL|TL], [Division|Distribucion], Z) :- normalize_list(TL, Distri
 *		KL: Numero de valor real. Divergencia KL.
 *
 ****************/
-divergencia_kl(D1, D2, KL) :- print('Error. Este ejercicio no esta implementado todavia.'), !, fail.
+divergencia_kl(D1, D2, KL) :- error_control6(D1, D2).
+
+/* Error control */
+error_control6(D1, D2) :- not(error_divergence_notDefined6(D1, D2)), not(error_divergence_notDistrib6(D1, D2)).
+
+error_divergence_notDefined6(D1, D2) :- ((find_zero_negative(D1) ; find_zero_negative(D2))
+                                          -> write_log('ERROR 6.1 Divergencia KL no definida.')).
+/* Returns true if there is an element in the list is 0 or lower */
+find_zero_negative([HL|_]) :- HL =< 0.
+find_zero_negative([_|TL]) :- find_zero_negative(TL).
+
+error_divergence_notDistrib6(D1, D2) :- ((not(check_distribution(D1, _)) ; not(check_distribution(D2, _)))
+                                          -> write_log('ERROR 6.2 Divergencia KL definida solo para distribuciones.')).
+/* Returns true if the list is distributed in order */
+check_distribution(L, E) :- (check_distribution_increasing(L, E) ; check_distribution_decreasing(L, E)).
+
+/* Returns true if the list follows a increasing distribution */
+check_distribution_increasing([HL], HL).
+check_distribution_increasing([HL|TL], E) :- check_distribution_increasing(TL, PreviousElem), PreviousElem >= HL, E is HL.
+
+/* Returns true if the list follows a decreasing distribution */
+check_distribution_decreasing([HL], HL).
+check_distribution_decreasing([HL|TL], E) :- check_distribution_decreasing(TL, PreviousElem), PreviousElem =< HL, E is HL.
 
 /***************
 * EJERCICIO 7. producto_kronecker/3

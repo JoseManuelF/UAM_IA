@@ -145,7 +145,7 @@ normalize_list([HL|TL], [Division|Distribucion], Z) :- normalize_list(TL, Distri
 *		KL: Numero de valor real. Divergencia KL.
 *
 ****************/
-divergencia_kl(D1, D2, KL) :- error_control6(D1, D2).
+divergencia_kl(D1, D2, KL) :- error_control6(D1, D2), calculate_divergence_kl(D1, D2, KL).
 
 /* Error control */
 error_control6(D1, D2) :- not(error_divergence_notDefined6(D1, D2)), not(error_divergence_notDistrib6(D1, D2)).
@@ -168,6 +168,10 @@ check_distribution_increasing([HL|TL], E) :- check_distribution_increasing(TL, P
 /* Returns true if the list follows a decreasing distribution */
 check_distribution_decreasing([HL], HL).
 check_distribution_decreasing([HL|TL], E) :- check_distribution_decreasing(TL, PreviousElem), PreviousElem =< HL, E is HL.
+
+/* We compute the Kullback Leibler divergence of two distributions given */
+calculate_divergence_kl([], [], 0).
+calculate_divergence_kl([H1|T1], [H2|T2], KL) :- calculate_divergence_kl(T1, T2, Sum), KL is Sum + (H1 * log(H1/H2)).
 
 /***************
 * EJERCICIO 7. producto_kronecker/3

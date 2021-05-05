@@ -15,11 +15,12 @@ sum_pot_prod(X, Y, Potencia, Resultado) :- error_control1(X, Y, Potencia), prod(
 
 /* Error control */
 error_control1(X, Y, Potencia) :- not(error_pot1(Potencia)), not(error_length1(X, Y)).
+
 error_pot1(Potencia) :- (Potencia < 0 -> write_log('ERROR 1.1 Potencia.')).
 error_length1(X, Y) :- length(X, Lx), length(Y, Ly), (Lx =\= Ly -> write_log('ERROR 1.2 Longitud.')).
 
 /* Sum of the products powered to a number */
-prod([], [], Potencia, Sum) :- Sum is 0.
+prod([], [], _, Sum) :- Sum is 0.
 prod([H1|T1], [H2|T2], Potencia, Resultado) :- prod(T1, T2, Potencia, Sum), Resultado is (H1*H2)**Potencia + Sum.
 
 /***************
@@ -55,7 +56,25 @@ calculate_penultimate([_|TL], Y) :- calculate_penultimate(TL, Y).
 *		Sublista: Sublista de salida de cadenas de texto.
 *
 ****************/
-sublista(L, Menor, Mayor, E, Sublista) :- print('Error. Este ejercicio no esta implementado todavia.'), !, fail.
+/* After getting the sublist we check whether it contains the element given or not */
+sublista(L, Menor, Mayor, E, Sublista) :- error_control3(L, Menor, Mayor, E), get_sublist(L, Menor, Mayor, Sublista),
+                                          not(error_element3(Sublista, E)).
+
+/* Error control */
+error_control3(L, Menor, Mayor, E) :- not(error_element3(L, E)), not(error_indexes3(L, Menor, Mayor)).
+
+error_element3(L, E) :- (not(find_element(L, E)) -> write_log('ERROR 3.1 Elemento.')).
+/* Returns true if the element is found in the list */
+find_element([E|_], E).
+find_element([_|TL], E) :- find_element(TL, E).
+
+error_indexes3(L, Menor, Mayor) :- length(L, Len), (((Menor > Mayor) ; (Mayor > Len)) -> write_log('ERROR 3.2 Indices.')).
+
+/* We get the sublist with the indexes given */
+get_sublist([HL|_], 1, 1, [HL]).
+get_sublist([HL|TL], 1, Mayor, [HL|Sublista]) :- Mayor > 1, Index2 is Mayor - 1, get_sublist(TL, 1, Index2, Sublista).
+get_sublist([_|TL], Menor, Mayor, Sublista) :- Menor > 1, Index1 is Menor - 1, Index2 is Mayor - 1,
+                                               get_sublist(TL, Index1, Index2, Sublista).
 
 /***************
 * EJERCICIO 4. espacio_lineal/4
@@ -68,7 +87,26 @@ sublista(L, Menor, Mayor, E, Sublista) :- print('Error. Este ejercicio no esta i
 *               Rejilla: Vector de numeros de valor real resultante con la rejilla.
 *
 ****************/
-espacio_lineal(Menor, Mayor, Numero_elementos, Rejilla) :- print('Error. Este ejercicio no esta implementado todavia.'), !, fail.
+/* As we get a nested list from linear_grid, we use the flatten predicate in lists for removing the extra brackets */
+espacio_lineal(Menor, Mayor, Numero_elementos, Rejilla) :- error_control4(Menor, Mayor, Numero_elementos),
+                                                           distance_elements(Menor, Mayor, Numero_elementos, Distance),
+                                                           linear_grid(Menor, Mayor, Numero_elementos, NestedList, Distance, _),
+                                                           flatten(NestedList, Rejilla).
+
+/* Error control */
+error_control4(Menor, Mayor, Numero_elementos) :- not(error_indexes4(Menor, Mayor)), not(error_npoints4(Numero_elementos)).
+
+error_indexes4(Menor, Mayor) :- (Menor >= Mayor -> write_log('ERROR 4.1 Indices.')).
+error_npoints4(Numero_elementos) :- (Numero_elementos < 2 -> write_log('ERROR 4.2 Numero Elementos.')).
+
+/* We get the distance between the elements in the linear grid list */
+distance_elements(Menor, Mayor, Numero_elementos, Distance) :- Distance is (Mayor - Menor)/(Numero_elementos - 1).
+
+/* We calculate the linear grid with the number of points and the interval given */
+linear_grid(Menor, _, 1, Menor, _, Menor).
+linear_grid(Menor, Mayor, Numero_elementos, [NestedList|[Sum]], Distance, Sum) :- Count is Numero_elementos - 1,
+                                                                                  linear_grid(Menor, Mayor, Count, NestedList, Distance, CurrentValue),
+                                                                                  Sum is CurrentValue + Distance.
 
 /***************
 * EJERCICIO 5. normalizar/2
@@ -79,7 +117,23 @@ espacio_lineal(Menor, Mayor, Numero_elementos, Rejilla) :- print('Error. Este ej
 *		Distribucion: Vector de numeros reales de salida. Distribucion normalizada.
 *
 ****************/
-normalizar(Distribucion_sin_normalizar, Distribucion) :- print('Error. Este ejercicio no esta implementado todavia.'), !, fail.
+normalizar(Distribucion_sin_normalizar, Distribucion) :- not(error_negatives5(Distribucion_sin_normalizar)),
+                                                         normalization_constant(Distribucion_sin_normalizar, Z),
+                                                         normalize_list(Distribucion_sin_normalizar, Distribucion, Z).
+
+/* Error control */
+error_negatives5(Distribucion_sin_normalizar) :- (find_negative(Distribucion_sin_normalizar) -> write_log('ERROR 5.1 Negativos.')).
+/* Returns true if there is a negative element in the list */
+find_negative([HL|_]) :- HL < 0.
+find_negative([_|TL]) :- find_negative(TL).
+
+/* We calculate the normalization constant z */
+normalization_constant([], 0).
+normalization_constant([HL|TL], Z) :- normalization_constant(TL, Sum), Z is Sum + HL.
+
+/* We divide all the elements in the list by the normalization constant z */
+normalize_list([HL], [Distribucion], Z) :- Distribucion is HL/Z.
+normalize_list([HL|TL], [Division|Distribucion], Z) :- normalize_list(TL, Distribucion, Z), Division is HL/Z.
 
 /***************
 * EJERCICIO 6. divergencia_kl/3
@@ -91,7 +145,33 @@ normalizar(Distribucion_sin_normalizar, Distribucion) :- print('Error. Este ejer
 *		KL: Numero de valor real. Divergencia KL.
 *
 ****************/
-divergencia_kl(D1, D2, KL) :- print('Error. Este ejercicio no esta implementado todavia.'), !, fail.
+divergencia_kl(D1, D2, KL) :- error_control6(D1, D2), calculate_divergence_kl(D1, D2, KL).
+
+/* Error control */
+error_control6(D1, D2) :- not(error_divergence_notDefined6(D1, D2)), not(error_divergence_notDistrib6(D1, D2)).
+
+error_divergence_notDefined6(D1, D2) :- ((find_zero_negative(D1) ; find_zero_negative(D2))
+                                          -> write_log('ERROR 6.1 Divergencia KL no definida.')).
+/* Returns true if there is an element in the list is 0 or lower */
+find_zero_negative([HL|_]) :- HL =< 0.
+find_zero_negative([_|TL]) :- find_zero_negative(TL).
+
+error_divergence_notDistrib6(D1, D2) :- ((not(check_distribution(D1, _)) ; not(check_distribution(D2, _)))
+                                          -> write_log('ERROR 6.2 Divergencia KL definida solo para distribuciones.')).
+/* Returns true if the list is distributed in order */
+check_distribution(L, E) :- (check_distribution_increasing(L, E) ; check_distribution_decreasing(L, E)).
+
+/* Returns true if the list follows a increasing distribution */
+check_distribution_increasing([HL], HL).
+check_distribution_increasing([HL|TL], E) :- check_distribution_increasing(TL, PreviousElem), PreviousElem >= HL, E is HL.
+
+/* Returns true if the list follows a decreasing distribution */
+check_distribution_decreasing([HL], HL).
+check_distribution_decreasing([HL|TL], E) :- check_distribution_decreasing(TL, PreviousElem), PreviousElem =< HL, E is HL.
+
+/* We compute the Kullback Leibler divergence of two distributions given */
+calculate_divergence_kl([], [], 0).
+calculate_divergence_kl([H1|T1], [H2|T2], KL) :- calculate_divergence_kl(T1, T2, Sum), KL is Sum + (H1 * log(H1/H2)).
 
 /***************
 * EJERCICIO 7. producto_kronecker/3
